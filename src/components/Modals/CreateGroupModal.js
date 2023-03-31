@@ -44,7 +44,10 @@ const CreateGroupModal = () => {
                     id="isAdmin"
                     label="Is Admin"
                     formControlLabelProps={{
-                        labelPlacement: 'start'
+                        labelPlacement: 'start',
+                        sx: {
+                            alignSelf: 'end'
+                        }
                     }}
                 />
                 <InputCheckbox
