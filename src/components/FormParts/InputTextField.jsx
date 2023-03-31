@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField } from '@mui/material';
 
 
-const InputTextField = ({id, label, handleValueChange, ...otherParams}) => {
+const InputTextField = ({id, label, handleValueChange, error, errorText, helperText, ...otherProps}) => {
 
     const onChange = (e) => {
         const value = e.target.value;
@@ -13,7 +13,9 @@ const InputTextField = ({id, label, handleValueChange, ...otherParams}) => {
             id={id}
             label={label}
             onChange={onChange}
-            { ...otherParams }
+            error={error}
+            helperText={(error && errorText) || helperText}
+            { ...otherProps }
         />
      );
 }

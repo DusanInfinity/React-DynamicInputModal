@@ -25,19 +25,14 @@ const InputModal = ({ open, handleClose, handleSave, children, initialState }) =
     const [dataState, setDataState] = useState(initialState ?? {});
 
     const setData = (id, value) => {
-        const newData = {};
-        newData[id] = value;
-
-        setDataState(s => ({ ...s, ...newData}));
+        setDataState(s => ({ ...s, [id]: value}));
     }
 
     const onSave = () => {
         const initialData = {};
         React.Children.forEach(children, child => {
-            if(React.isValidElement(child) && child.props.id)
-            {
+            if(React.isValidElement(child) && typeof child.props.id !== 'undefined')
                 initialData[child.props.id] = undefined;
-            }
         })
         const data = { ...initialData, ...dataState };
         handleSave(data);
@@ -51,8 +46,8 @@ const InputModal = ({ open, handleClose, handleSave, children, initialState }) =
     const isChildEmptyAndRequired = (childProps) => {
         if(childProps.required && !dataState[childProps.id])
             return true;
-        else
-            return false;
+
+        return false;
     }
 
     return (
@@ -66,14 +61,14 @@ const InputModal = ({ open, handleClose, handleSave, children, initialState }) =
             <div style={childrenDivStyle}>
                 {
                     React.Children.map(children, child => {
-                        if (React.isValidElement(child) && child.props.id)
+                        if (React.isValidElement(child) && typeof child.props.id !== 'undefined')
                         {
-                            console.log(child.props.id);
+                            const id = child.props.id;
                             return React.cloneElement(child, { 
                                 handleValueChange: setData, 
                                 error: isChildEmptyAndRequired(child.props),
                                 style: { marginTop: '10px', marginBottom: '10px'},
-                                value: dataState[child.props.id] || ''
+                                value: dataState[id] || ''
                              });
                         }
                             
