@@ -2,7 +2,6 @@ import { Modal } from '@mui/material';
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
 const style = {
   position: 'absolute',
@@ -19,6 +18,7 @@ const style = {
 const childrenDivStyle = {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'flex-start'
 }
 
 const InputModal = ({ open, handleClose, handleSave, children, initialState }) => {
@@ -32,8 +32,20 @@ const InputModal = ({ open, handleClose, handleSave, children, initialState }) =
     }
 
     const onSave = () => {
-        const data = dataState;
+        const initialData = {};
+        React.Children.forEach(children, child => {
+            if(React.isValidElement(child) && child.props.id)
+            {
+                initialData[child.props.id] = undefined;
+            }
+        })
+        const data = { ...initialData, ...dataState };
         handleSave(data);
+    }
+
+    const onClose = () => {
+        setDataState(initialState ?? {});
+        handleClose();
     }
 
     const isChildEmptyAndRequired = (childProps) => {
@@ -46,17 +58,11 @@ const InputModal = ({ open, handleClose, handleSave, children, initialState }) =
     return (
         <Modal
             open={open}
-            onClose={handleClose}
+            onClose={onClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-                Text in a modal
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
             <div style={childrenDivStyle}>
                 {
                     React.Children.map(children, child => {
@@ -64,16 +70,17 @@ const InputModal = ({ open, handleClose, handleSave, children, initialState }) =
                         {
                             console.log(child.props.id);
                             return React.cloneElement(child, { 
-                                handleValueChange: setData, error: 
-                                isChildEmptyAndRequired(child.props),
-                                style: { marginTop: '20px'}
+                                handleValueChange: setData, 
+                                error: isChildEmptyAndRequired(child.props),
+                                style: { marginTop: '10px', marginBottom: '10px'},
+                                value: dataState[child.props.id] || ''
                              });
                         }
                             
                         return child;
                     })
                 }
-                <Button onClick={onSave}>Save</Button>
+                <Button onClick={onSave} style={{alignSelf: 'center'}}>Save</Button>
             </div>
             </Box>
         </Modal>

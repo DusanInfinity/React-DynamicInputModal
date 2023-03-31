@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import InputModal from './Abstracts/InputModal';
-import InputTextView from '../FormParts/InputTextField';
 import InputTextField from '../FormParts/InputTextField';
 
 const CreateGroupModal = () => {
@@ -22,6 +21,7 @@ const CreateGroupModal = () => {
                 open={open}
                 handleClose={handleClose}
                 handleSave={onSave}
+                initialState={{ groupName: undefined }}
             >
                 <InputTextField
                     id="groupName"
@@ -33,7 +33,7 @@ const CreateGroupModal = () => {
                 <InputTextField
                     id="groupTag"
                     label="Tag"
-                    fullWidth
+                    required
                 />
             </InputModal>
         </div>
